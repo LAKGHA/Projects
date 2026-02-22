@@ -93,6 +93,17 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 
+  buils_docker_image_and_push:
+    runs-on: self-hosted
+    needs: build_project_and_sonar_scan
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download JAR artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: app-jar
+        path: app  # this will download JAR to ./app folder
+        
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
@@ -107,5 +118,5 @@ jobs:
       with:
         context: .
         push: true
-        tags: adijaiswal/bankapp:latest
+        tags: lak1234/bankapp:latest
         file: ./Dockerfile
